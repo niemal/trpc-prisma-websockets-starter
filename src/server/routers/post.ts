@@ -8,6 +8,7 @@ import { EventEmitter } from 'events';
 import { prisma } from '../prisma';
 import { z } from 'zod';
 import { authedProcedure, publicProcedure, router } from '../trpc';
+import { utapi } from 'uploadthing/server';
 
 interface MyEvents {
   add: (data: Post) => void;
@@ -59,6 +60,7 @@ export const postRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      await utapi.deleteFiles('test');
       const { name } = ctx.user;
       const post = await prisma.post.create({
         data: {
